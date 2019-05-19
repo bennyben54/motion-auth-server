@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
 @Configuration
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
@@ -27,6 +28,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
                 .inMemory()
@@ -35,5 +37,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .scopes("resource:read")
                 .authorizedGrantTypes("authorization_code", "client_credentials", "password", "refresh_token")
                 .redirectUris("http://localhost:8081/test");
+    }
+
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.checkTokenAccess("isAuthenticated()");
     }
 }
