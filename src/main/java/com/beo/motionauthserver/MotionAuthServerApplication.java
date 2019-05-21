@@ -10,8 +10,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @SpringBootApplication
 public class MotionAuthServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MotionAuthServerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MotionAuthServerApplication.class, args);
+    }
 
 }
