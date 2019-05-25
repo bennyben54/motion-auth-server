@@ -4,30 +4,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+
+import javax.sql.DataSource;
 
 @Configuration
-public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private DataSource dataSource;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
-        userDetailsManager.createUser(
-                User.withUsername("enduser")
-                        .passwordEncoder(s -> passwordEncoder.encode(s))
-                        .password("password")
-                        .roles("USER")
-                        .authorities("USER")
-                        .build());
+        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+//        userDetailsManager.createUser(
+//                User.withUsername("enduser")
+//                        .passwordEncoder(s -> passwordEncoder.encode(s))
+//                        .password("password")
+//                        .roles("USER")
+//                        .authorities("USER")
+//                        .build());
         return userDetailsManager;
 
     }
