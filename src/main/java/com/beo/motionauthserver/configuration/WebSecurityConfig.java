@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private DataSource dataSource;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -31,8 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private DaoAuthenticationProvider authenticationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -59,51 +54,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 );
     }
 
-//    @Bean
-//    public DaoAuthenticationProvider authenticationProvider() {
-//    DaoAuthenticationProvider authProvider
-//      = new DaoAuthenticationProvider();
-//    authProvider.setUserDetailsService(userService);
-//    authProvider.setPasswordEncoder(passwordEncoder);
-//    return authProvider;
-//}
-
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        DaoAuthenticationProvider authProvider
-//                = new DaoAuthenticationProvider();
-//        authProvider.setUserDetailsService(userService);
-//        authProvider.setPasswordEncoder(passwordEncoder);
-//        return authProvider;
-//        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-////        userDetailsManager.createUser(
-////                User.withUsername("enduser")
-////                        .passwordEncoder(s -> passwordEncoder.encode(s))
-////                        .password("password")
-////                        .roles("USER")
-////                        .authorities("USER")
-////                        .build());
-//        return userDetailsManager;
-//
-//    }
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .antMatcher("/**")
-//                .authorizeRequests()
-//                .antMatchers("/oauth/**")
-//                .permitAll()
-//                .and()
-//                .authorizeRequests()
-//                .anyRequest().authenticated();
-//    }
 }
