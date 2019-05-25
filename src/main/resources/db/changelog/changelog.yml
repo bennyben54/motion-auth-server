@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: classpath:db/changelog/v0.1/create_users.yml
+  - include:
+      file: classpath:db/changelog/v0.1/create_authorities.yml
