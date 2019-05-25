@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: beo-20190525-create_authorities
+      author: beo
+      changes:
+        - createTable:
+            tableName: authorities
+            columns:
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: authority
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_authorities_users
+            baseColumnNames: username
+            baseTableName: authorities
+            referencedColumnNames: username
+            referencedTableName: users
+        - createIndex:
+            indexName: ix_auth_username
+            tableName: authorities
+            unique: true
+            columns:
+              - column:
+                  name: username
+              - column:
+                  name: authority

@@ -11,3 +11,16 @@ logging:
     org:
       springframework:
         security: TRACE
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: beo
+    password: beo
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+  liquibase:
+    change-log: classpath:db/changelog/changelog.yml
