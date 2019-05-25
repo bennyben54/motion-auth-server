@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         createAdminIfDoesntExist();
-        auth.userDetailsService(userService)
+        auth.userDetailsService(userService) // use our custom userService for AuthenticationManagerBuilder
                 .passwordEncoder(passwordEncoder);
     }
 
