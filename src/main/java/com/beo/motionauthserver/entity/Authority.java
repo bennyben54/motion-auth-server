@@ -1,26 +1,29 @@
 package com.beo.motionauthserver.entity;
 
 import com.beo.motionauthserver.entity.enums.AuthorityType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@IdClass(AuthorityId.class)
 @Table(name = "authorities",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"username", "authority"})})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "authority"})})
 public class Authority {
 
     @Id
-    @Column(nullable = false)
-    private String username;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
+    private UUID id;
 
-    @Id
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AuthorityType authority;

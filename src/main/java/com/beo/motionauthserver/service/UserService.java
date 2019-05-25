@@ -3,26 +3,38 @@ package com.beo.motionauthserver.service;
 import com.beo.motionauthserver.entity.Authority;
 import com.beo.motionauthserver.entity.User;
 import com.beo.motionauthserver.entity.enums.AuthorityType;
-import com.beo.motionauthserver.repository.AuthorityRepository;
 import com.beo.motionauthserver.repository.UserRepository;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final AuthorityRepository authorityRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        org.springframework.security.core.userdetails.User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
+        builder.password(user.getPassword());
+        builder.roles(user.getAuthorities().stream().map(authority -> authority.getAuthority().name()).toArray(String[]::new));
+
+        return builder.build();
     }
 
     public User findUser(String username) {
-        return userRepository.findById(username).orElse(null);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     public User createUser(User user) {
@@ -35,25 +47,25 @@ public class UserService {
         if (Strings.isEmpty(user.getPassword())) {
             throw new IllegalArgumentException("password is empty or null");
         }
-        userRepository.findById(user.getUsername()).ifPresent(u -> {
+        userRepository.findByUsername(user.getUsername()).ifPresent(u -> {
             throw new IllegalArgumentException("User already exists");
         });
         user.setEnabled(false);
 
-        User save = userRepository.save(user);
+        user.getAuthorities().add(new Authority(null, user, AuthorityType.USER));
 
-        authorityRepository.save(new Authority(user.getUsername(), AuthorityType.USER));
-
-        return save;
+        return userRepository.save(user);
     }
 
     public User toggleUserActivation(String username, boolean enabled) {
-        final User user = userRepository.findById(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        final User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.setEnabled(enabled);
         return userRepository.save(user);
     }
 
     public void deleteUser(String username) {
-        userRepository.deleteById(username);
+        userRepository.findByUsername(username).ifPresent(userRepository::delete);
     }
+
+
 }

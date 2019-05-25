@@ -22,5 +22,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-  liquibase:
-    change-log: classpath:db/changelog/changelog.yml
+#  liquibase:
+#    change-log: classpath:db/changelog/changelog.yml

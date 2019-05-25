@@ -26,8 +26,7 @@ public class UserRestController {
         User user = userService.findUser(authentication.getName());
         StringBuilder userInfo = new StringBuilder("[");
         userInfo.append(user.getUsername()).append("=");
-        authorityRepository.findByUsername(user.getUsername()).
-                stream().forEach(a -> userInfo.append(a.getAuthority().name()));
+        user.getAuthorities().stream().forEach(a -> userInfo.append(a.getAuthority().name()));
         userInfo.append("]");
         return userInfo.toString();
     }
