@@ -36,7 +36,10 @@ public class UserService implements UserDetailsService {
 
         org.springframework.security.core.userdetails.User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
         builder.password(user.getPassword());
-        builder.roles(user.getAuthorities().stream().map(authority -> authority.getAuthority().name()).toArray(String[]::new));
+        String[] rolesAuthorities = user.getAuthorities().stream().map(authority -> authority.getAuthority().name()).toArray(String[]::new);
+        builder.roles(rolesAuthorities);
+        builder.authorities(rolesAuthorities);
+        builder.disabled(!user.getEnabled());
 
         return builder.build();
     }
@@ -68,6 +71,7 @@ public class UserService implements UserDetailsService {
         userDto.setId(userRepository.save(user).getId());
         userDto.setEnabled(false);
         userDto.setPassword(null);
+        userDto.getAuthorities().addAll(user.getAuthorities().stream().map(Authority::getAuthority).collect(Collectors.toList()));
 
         return userDto;
     }
