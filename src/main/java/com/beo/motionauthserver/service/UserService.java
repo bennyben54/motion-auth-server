@@ -1,5 +1,7 @@
 package com.beo.motionauthserver.service;
 
+import com.beo.motionauthserver.configuration.AuthPasswordEncoder;
+import com.beo.motionauthserver.dto.UserDto;
 import com.beo.motionauthserver.entity.Authority;
 import com.beo.motionauthserver.entity.User;
 import com.beo.motionauthserver.entity.enums.AuthorityType;
@@ -11,20 +13,26 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService implements UserDetailsService {
 
+    private final AuthPasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(AuthPasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByUsernameAndEnabled(username, true).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         org.springframework.security.core.userdetails.User.UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
         builder.password(user.getPassword());
@@ -37,30 +45,38 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElse(null);
     }
 
-    public User createUser(User user) {
-        if (user == null) {
+    public UserDto createUser(UserDto userDto) {
+        if (userDto == null) {
             throw new IllegalArgumentException("User is null");
         }
-        if (Strings.isEmpty(user.getUsername())) {
+        if (Strings.isEmpty(userDto.getUsername())) {
             throw new IllegalArgumentException("username is empty or null");
         }
-        if (Strings.isEmpty(user.getPassword())) {
+        if (Strings.isEmpty(userDto.getPassword())) {
             throw new IllegalArgumentException("password is empty or null");
         }
-        userRepository.findByUsername(user.getUsername()).ifPresent(u -> {
+        userRepository.findByUsername(userDto.getUsername()).ifPresent(u -> {
             throw new IllegalArgumentException("User already exists");
         });
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEnabled(false);
 
         user.getAuthorities().add(new Authority(null, user, AuthorityType.USER));
 
-        return userRepository.save(user);
+        userDto.setId(userRepository.save(user).getId());
+        userDto.setEnabled(false);
+        userDto.setPassword(null);
+
+        return userDto;
     }
 
-    public User toggleUserActivation(String username, boolean enabled) {
-        final User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        user.setEnabled(enabled);
-        return userRepository.save(user);
+    public Boolean toggleUserActivation(UUID id, Boolean enabled) {
+        final User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setEnabled(Boolean.TRUE.equals(enabled));
+        return enabled;
     }
 
     public void deleteUser(String username) {
@@ -68,4 +84,12 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public List<UserDto> findAll() {
+        return userRepository.findAll().stream().map(
+                user -> {
+                    UserDto userDto = new UserDto();
+                    return userDto;
+                }
+        ).collect(Collectors.toList());
+    }
 }

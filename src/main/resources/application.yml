@@ -8,9 +8,9 @@ security:
 logging:
   level:
     root: INFO
-    org:
-      springframework:
-        security: TRACE
+#    org:
+#      springframework:
+#        security: TRACE
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
