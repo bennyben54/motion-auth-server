@@ -1,6 +1,5 @@
 package com.beo.motionauthserver.rest;
 
-import com.beo.motionauthserver.configuration.AuthPasswordEncoder;
 import com.beo.motionauthserver.dto.UserDto;
 import com.beo.motionauthserver.entity.User;
 import com.beo.motionauthserver.service.UserService;
@@ -28,15 +27,28 @@ public class UserRestController {
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping(value = "/list")
-    public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok(userService.findAll());
+    public ResponseEntity<List<UserDto>> getUsers(Authentication authentication) {
+        User user = userService.findUser(authentication.getName());
+        return ResponseEntity.ok(userService.findAll(user.getId()));
     }
 
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping(value = "/list/subscribers")
+    public ResponseEntity<List<UserDto>> getSubscriptions() {
+        return ResponseEntity.ok(userService.findAllSubscription());
+    }
+
+    @PostMapping(value = "/subscribe")
+    public ResponseEntity<UserDto> subscribe(@RequestBody UserDto toCreate) {
+        return new ResponseEntity<>(userService.subscribe(toCreate), HttpStatus.CREATED);
+    }
 
     @Secured({"ROLE_ADMIN"})
-    @PostMapping
-    public ResponseEntity<UserDto> create(@RequestBody UserDto toCreate) {
-        return new ResponseEntity<>(userService.createUser(toCreate), HttpStatus.CREATED);
+    @PostMapping(value = "/{subscritionId}")
+    public ResponseEntity<UserDto> create(
+            @PathVariable UUID subscritionId
+    ) {
+        return new ResponseEntity<>(userService.createUser(subscritionId), HttpStatus.CREATED);
     }
 
     @Secured({"ROLE_ADMIN"})

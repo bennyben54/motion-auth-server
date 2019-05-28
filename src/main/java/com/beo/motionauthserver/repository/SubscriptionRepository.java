@@ -1,18 +1,14 @@
 package com.beo.motionauthserver.repository;
 
+import com.beo.motionauthserver.entity.Subscription;
 import com.beo.motionauthserver.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface SubscriptionRepository extends JpaRepository<Subscription, UUID> {
 
     Optional<User> findByUsername(String username);
-
-    Optional<User> findByUsernameAndEnabled(String username, boolean enabled);
-
-    List<User> findByIdNot(UUID id);
 
 }
