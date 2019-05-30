@@ -1,0 +1,24 @@
+@startuml
+:Front;
+:Traefik|
+partition Gateway {
+	split
+        :/camera1}
+        ::8081}
+    split again
+        :/camera2}
+        ::8082}
+    split again
+        :/oauth/**}
+        ::8083/oauth/**}
+    split again
+        :/api/user/**}
+        ::8083/api/user/**}
+    split again
+        :/api/custom/**}
+        ::8084/api/custom/**}
+    end split
+}
+:Raspi;
+
+@enduml

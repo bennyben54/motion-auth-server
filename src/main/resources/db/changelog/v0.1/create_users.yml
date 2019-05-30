@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: beo-20190525-create_users
+      author: beo
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValue: false
+                  constraints:
+                    nullable: false
