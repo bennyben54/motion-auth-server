@@ -1,16 +1,16 @@
 server:
-  port: 8080
+  port: 8083
 security:
   oauth2:
     client:
-      client-id: first-client
-      client-secret: noonewilleverguess
+      client-id: beo-app-client
+      client-secret: e6aec4e0-e421-415a-8f84-d06237963831
 logging:
   level:
     root: INFO
-    org:
-      springframework:
-        security: TRACE
+#    org:
+#      springframework:
+#        security: TRACE
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
@@ -22,5 +22,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-  liquibase:
-    change-log: classpath:db/changelog/changelog.yml
+#  liquibase:
+#    change-log: classpath:db/changelog/changelog.yml
