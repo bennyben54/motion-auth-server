@@ -28,8 +28,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
                 .inMemory()
-                .withClient("first-client")
-                .secret(passwordEncoder.encode("noonewilleverguess"))
+                .withClient("beo-app-client")
+                .secret(passwordEncoder.encode("e6aec4e0-e421-415a-8f84-d06237963831"))
                 .scopes("resource:read")
                 .authorizedGrantTypes("authorization_code", "client_credentials", "password", "refresh_token")
                 .redirectUris("http://localhost:8081/test");

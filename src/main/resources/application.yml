@@ -1,10 +1,10 @@
 server:
-  port: 8080
+  port: 8083
 security:
   oauth2:
     client:
-      client-id: first-client
-      client-secret: noonewilleverguess
+      client-id: beo-app-client
+      client-secret: e6aec4e0-e421-415a-8f84-d06237963831
 logging:
   level:
     root: INFO
