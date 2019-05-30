@@ -103,6 +103,8 @@ public class UserService implements UserDetailsService {
         userDto.setPassword(null);
         userDto.getAuthorities().addAll(user.getAuthorities().stream().map(Authority::getAuthority).collect(Collectors.toList()));
 
+        subscriptionRepository.deleteById(subscriptionId);
+
         return userDto;
     }
 
