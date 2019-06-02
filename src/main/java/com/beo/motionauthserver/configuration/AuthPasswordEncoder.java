@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class AuthPasswordEncoder extends BCryptPasswordEncoder {
 
     public AuthPasswordEncoder() {
-        super(15);
+        super(4);
     }
 
 }
