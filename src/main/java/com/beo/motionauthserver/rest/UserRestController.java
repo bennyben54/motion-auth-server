@@ -67,6 +67,24 @@ public class UserRestController {
         return ResponseEntity.ok(userService.toggleUserActivation(userId, false));
     }
 
+    @Secured({"ROLE_ADMIN"})
+    @DeleteMapping(value = "/{userId}")
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable UUID userId
+    ) {
+        userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @DeleteMapping(value = "/{subscriptionId}")
+    public ResponseEntity<Void> deleteSubscription(
+            @PathVariable UUID subscriptionId
+    ) {
+        userService.deleteSubscription(subscriptionId);
+        return ResponseEntity.ok().build();
+    }
+
 
 //    @Secured({"ROLE_ADMIN", "ROLE_USER"})
 //    @GetMapping(path = "/api/user/who/am/i")
