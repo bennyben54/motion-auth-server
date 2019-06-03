@@ -77,7 +77,7 @@ public class UserRestController {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @DeleteMapping(value = "/{subscriptionId}")
+    @DeleteMapping(value = "/subscription/{subscriptionId}")
     public ResponseEntity<Void> deleteSubscription(
             @PathVariable UUID subscriptionId
     ) {
