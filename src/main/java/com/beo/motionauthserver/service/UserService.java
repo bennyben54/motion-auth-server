@@ -115,8 +115,12 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user).getEnabled();
     }
 
-    public void deleteUser(String username) {
-        userRepository.findByUsername(username).ifPresent(userRepository::delete);
+    public void deleteUser(UUID userId) {
+        userRepository.deleteById(userId);
+    }
+
+    public void deleteSubscription(UUID subscriptionId) {
+        subscriptionRepository.deleteById(subscriptionId);
     }
 
 
